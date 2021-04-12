@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <table>
+        <thead>
+            <tr>
+                <td>#</td>
+                <td>nombre</td>
+                <td>edad</td>
+            </tr>
+        </thead>
+        <tbody id="usersTable"></tbody>
+    </table>
+
+    <h1>EDAD PROMEDIO: <span id="avgAge"></span></h1>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+    <script>
+        main()
+
+        async function main() {
+            try {
+                let usersRes = await axios.get('/api/users')
+
+                console.log(usersRes)
+
+                document.querySelector('#usersTable').innerHTML = usersRes.data.reduce((acc, el, i) => {
+                    acc += `
+                        <tr>
+                            <td>${i+1}</td>
+                            <td>${el.name}</td>
+                            <td>${el.age}</td>
+                        </tr>
+                    `
+
+                    return acc
+                }, '')
+
+                document.querySelector('#avgAge').innerHTML = usersRes.data.reduce((acc, el, i) => {
+                    acc += el.age
+
+                    return acc
+                }, 0) / usersRes.data.length
+
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+    </script>
+</body>
+</html>
